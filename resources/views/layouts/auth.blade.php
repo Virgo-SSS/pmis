@@ -27,12 +27,7 @@
             </nav>
         </div><!-- End Page Title -->
 
-        <section class="section dashboard">
-            <div class="row">
-                @yield('content')
-            </div>
-        </section>
-
+        @yield('content')
     </main><!-- End #main -->
 
     @include('layouts.footer')
