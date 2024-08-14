@@ -10,6 +10,7 @@
     <meta content="" name="keywords">
 
     @include('layouts.styles')
+    @yield('styles')
 </head>
 
 <body>
@@ -32,5 +33,6 @@
 
     @include('layouts.footer')
     @include('layouts.scripts')
+    @yield('scripts')
 </body>
 </html>

@@ -5,6 +5,9 @@
 {{-- Simple datatables --}}
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
 
+{{-- Jquery --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 <!-- Vendor JS Files -->
 <script src="{{ asset('assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
 <script src="{{ asset('assets/vendor/chart.js/chart.umd.js') }}"></script>
@@ -15,3 +18,26 @@
 
 <!-- Template Main JS File -->
 <script src="{{ asset('assets/js/main.js') }}"></script>
+
+{{-- SweetAlert --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    @if(session('success-swal'))
+        Swal.fire({
+            title: 'Success!',
+            text: "{{ session('success-swal') }}",
+            icon: 'success',
+            confirmButtonText: 'Close'
+        })
+    @endif
+
+    @if(session('error-swal'))
+        Swal.fire({
+            title: 'Error!',
+            text: "{{ session('error-swal') }}",
+            icon: 'error',
+            confirmButtonText: 'Close'
+        })
+    @endif
+</script>
