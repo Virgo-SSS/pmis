@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Dashboard - PMIS</title>
+    <title>@yield('title-page') - PMIS</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -22,7 +22,7 @@
             <h1>@yield('title')</h1>
             <nav>
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">@yield('breadcrumb-item-1')</a></li>
+                    <li class="breadcrumb-item"><a href="@yield('breadcrumb-item-1-link')">@yield('breadcrumb-item-1')</a></li>
                     <li class="breadcrumb-item active">@yield('breadcrumb-item-2')</li>
                 </ol>
             </nav>

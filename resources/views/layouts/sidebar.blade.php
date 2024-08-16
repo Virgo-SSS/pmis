@@ -14,5 +14,12 @@
                 <span>Department</span>
             </a>
         </li>
+
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('role') ? '' : 'collapsed' }}" href="{{ route('role') }}">
+                <i class="bi bi-building"></i>
+                <span>Role and Permission Control</span>
+            </a>
+        </li>
     </ul>
 </aside><!-- End Sidebar-->
