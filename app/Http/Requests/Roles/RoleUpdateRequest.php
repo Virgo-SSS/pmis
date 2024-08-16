@@ -43,6 +43,19 @@ class RoleUpdateRequest extends FormRequest
             }
         ];
     }
+    
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'permissions.required' => 'Please select at least one permission.',
+            'permissions.*.exists' => 'The selected permission is invalid.',
+        ];
+    }
 
     /**
      * Determine if user tried to update administrator role.

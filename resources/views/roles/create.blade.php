@@ -17,7 +17,10 @@
                         <h5 class="card-title">Role</h5>
                         <div class="row">
                             <div class="col-12">
-                                <input type="text" name="name" value="{{ old('name') }}" class="form-control" id="role-name" placeholder="Role Name e.g. Admin">
+                                <input type="text" name="name" value="{{ old('name') }}" class="form-control" id="role-name" placeholder="Role Name e.g. Admin" required>
+                                @error('name')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -32,6 +35,9 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Permissions</h5>
+                        @error('permissions')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
                         <div class="row">
                             @foreach($permissions->chunk(4) as $chunk)
                                 <div class="row">

@@ -19,7 +19,10 @@
                         <div class="row">
                             <div class="col-12">
                                 <label for="role-name" class="form-label">Role Name</label>
-                                <input type="text" name="name" value="{{ $role->name }}" class="form-control" id="role-name">
+                                <input type="text" name="name" value="{{ $role->name }}" class="form-control" id="role-name" required>
+                                @error('name')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -34,6 +37,9 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Permissions</h5>
+                        @error('permissions')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
                         <div class="row">
                             @foreach($permissions->chunk(4) as $chunk)
                                 <div class="row">

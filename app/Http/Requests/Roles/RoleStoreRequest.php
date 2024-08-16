@@ -9,6 +9,8 @@ class RoleStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     * 
+     * @return bool
      */
     public function authorize(): bool
     {
@@ -26,6 +28,19 @@ class RoleStoreRequest extends FormRequest
             'name' => ['required', 'string', 'max:255', 'unique:roles,name'],
             'permissions' => ['required', 'array'],
             'permissions.*' => ['exists:permissions,id'],
+        ];
+    }
+    
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'permissions.required' => 'Please select at least one permission.',
+            'permissions.*.exists' => 'The selected permission is invalid.',
         ];
     }
 }
