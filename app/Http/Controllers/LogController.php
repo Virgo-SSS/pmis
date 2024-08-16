@@ -9,7 +9,9 @@ class LogController extends Controller
 {
     public function index(): View
     {
-        $logs = Activity::query()->latest()->get();
+        $logs = Activity::query()
+        ->with('causer')
+        ->latest()->get();
 
         return view('logs.activity-log', compact('logs'));
     }
