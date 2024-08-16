@@ -17,6 +17,10 @@ class CreateDepartmentAction extends Action
      */
     public function handle(CreateDepartmentData $data): void
     {
+        /**
+         * Use transaction because we run multiple queries in this action (create department and log the activity)
+         * Log activity run behind the scene in the model
+         */
         DB::transaction(function () use ($data) {
             Department::query()
                 ->create([

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Department;
+use App\Models\User;
 use Tests\TestCase;
 
 class DepartmentTest extends TestCase
@@ -44,7 +45,8 @@ class DepartmentTest extends TestCase
      */
     public function test_user_can_create_a_department(): void
     {
-        $this->actingAs($this->createUser());
+        $user = $this->createUser();
+        $this->actingAs($user);
 
         $response = $this->post(route('department.store'), [
             'name' => 'IT Department',
@@ -55,6 +57,15 @@ class DepartmentTest extends TestCase
 
         $this->assertDatabaseHas('departments', [
             'name' => 'IT Department',
+        ]);
+
+        $this->assertDatabaseHas(config('activitylog.table_name'), [
+            'log_name' => 'default',
+            'description' => 'Create new department with name IT Department',
+            'subject_type' => Department::class,
+            'subject_id' => Department::first()->id,
+            'causer_type' => User::class,
+            'causer_id' => $user->id,
         ]);
     }
 
@@ -97,7 +108,8 @@ class DepartmentTest extends TestCase
      */
     public function test_user_can_update_a_department(): void
     {
-        $this->actingAs($this->createUser());
+        $user = $this->createUser();
+        $this->actingAs($user);
 
         $department = Department::factory()->create();
 
@@ -110,6 +122,15 @@ class DepartmentTest extends TestCase
 
         $this->assertDatabaseHas('departments', [
             'name' => 'IT Department',
+        ]);
+
+        $this->assertDatabaseHas(config('activitylog.table_name'), [
+            'log_name' => 'default',
+            'description' => 'Update department from ' . $department->name . ' to IT Department',
+            'subject_type' => Department::class,
+            'subject_id' => $department->id,
+            'causer_type' => User::class,
+            'causer_id' => $user->id,
         ]);
     }
 
@@ -171,7 +192,8 @@ class DepartmentTest extends TestCase
      */
     public function test_user_can_delete_a_department(): void
     {
-        $this->actingAs($this->createUser());
+        $user = $this->createUser();
+        $this->actingAs($user);
 
         $department = Department::factory()->create();
 
@@ -182,6 +204,15 @@ class DepartmentTest extends TestCase
 
         $this->assertDatabaseMissing('departments', [
             'name' => $department->name,
+        ]);
+
+        $this->assertDatabaseHas(config('activitylog.table_name'), [
+            'log_name' => 'default',
+            'description' => 'Delete department with name ' . $department->name,
+            'subject_type' => Department::class,
+            'subject_id' => $department->id,
+            'causer_type' => User::class,
+            'causer_id' => $user->id,
         ]);
     }
 }

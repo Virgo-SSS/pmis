@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/edit/{role}', 'edit')->name('role.edit');
         Route::put('/{role}', 'update')->name('role.update');
         Route::delete('/{role}', 'delete')->name('role.delete');
+    });
+
+    Route::controller(LogController::class)->prefix('logs')->group(function () {
+        Route::get('/activity-logs', 'index')->name('activity-logs');
     });
 });
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Spatie\Permission\Models\Permission;
@@ -73,7 +74,8 @@ class RoleTest extends TestCase
      */
     public function test_user_can_create_a_role(): void
     {
-        $this->actingAs($this->createUser());
+        $user = $this->createUser();
+        $this->actingAs($user);
 
         Permission::create(['name' => 'view roles']);
         Permission::create(['name' => 'create roles']);
@@ -89,6 +91,17 @@ class RoleTest extends TestCase
         $this->assertDatabaseHas('roles', ['name' => 'Test Role']);
         $this->assertDatabaseHas('role_has_permissions', ['role_id' => 1, 'permission_id' => 1]);
         $this->assertDatabaseHas('role_has_permissions', ['role_id' => 1, 'permission_id' => 2]);
+
+        $role = Role::query()->where('name', 'Test Role')->first();
+
+        $this->assertDatabaseHas(config('activitylog.table_name'), [
+            'log_name' => 'default',
+            'description' => 'Create role with name Test Role',
+            'subject_type' => Role::class,
+            'subject_id' => $role->id,
+            'causer_type' => User::class,
+            'causer_id' => $user->id,
+        ]);
     }
 
     /**
@@ -204,7 +217,8 @@ class RoleTest extends TestCase
      */
     public function test_user_can_update_a_role(): void
     {
-        $this->actingAs($this->createUser());
+        $user = $this->createUser();
+        $this->actingAs($user);
 
         $role = Role::create(['name' => 'Test Role 123']);
 
@@ -224,6 +238,15 @@ class RoleTest extends TestCase
         $this->assertDatabaseHas('role_has_permissions', ['role_id' => $role->id, 'permission_id' => $permission1->id]);
         $this->assertDatabaseHas('role_has_permissions', ['role_id' => $role->id, 'permission_id' => $permission2->id]);
         $this->assertDatabaseHas('role_has_permissions', ['role_id' => $role->id, 'permission_id' => $permission3->id]);
+
+        $this->assertDatabaseHas(config('activitylog.table_name'), [
+            'log_name' => 'default',
+            'description' => 'Update role from Test Role 123 to Updated Role 123',
+            'subject_type' => Role::class,
+            'subject_id' => $role->id,
+            'causer_type' => User::class,
+            'causer_id' => $user->id,
+        ]);
     }
 
     /**
@@ -325,9 +348,11 @@ class RoleTest extends TestCase
      */
     public function test_user_can_delete_a_role(): void
     {
-        $this->actingAs($this->createUser());
+        $user = $this->createUser();
+        $this->actingAs($user);
 
         $role = Role::create(['name' => 'Test Role']);
+        $savedRole = $role->replicate();
 
         $response = $this->delete(route('role.delete', $role));
 
@@ -335,6 +360,14 @@ class RoleTest extends TestCase
         $response->assertSessionHas('success-swal', 'Role deleted successfully.');
 
         $this->assertDatabaseMissing('roles', ['name' => 'Test Role']);
+
+        $this->assertDatabaseMissing(config('activitylog.table_name'), [
+            'description' => 'Delete role with name Test Role',
+            'subject_type' => Role::class,
+            'subject_id' => $savedRole->id,
+            'causer_type' => User::class,
+            'causer_id' => $user->id,
+        ]);
     }
 
     /**

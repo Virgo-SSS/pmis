@@ -4,6 +4,7 @@ namespace App\Actions\Roles;
 
 use App\Actions\Action;
 use App\DataTransferObjects\CreateRoleData;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -26,6 +27,18 @@ class CreateRoleAction extends Action
             $permissions = Permission::query()->whereIn('id', $data->permissions)->pluck('name')->toArray();
             
             $role->givePermissionTo($permissions);
+
+            activity()
+                ->causedBy(Auth::user())
+                ->performedOn($role)
+                ->event('created')
+                ->withProperties([
+                    'attributes' => [
+                        'name' => $role->name,
+                        'permissions' => implode(', ', $permissions),
+                    ],
+                ])
+                ->log('Create role with name ' . $role->name);
         });
     }
 }
