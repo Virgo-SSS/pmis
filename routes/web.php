@@ -7,6 +7,7 @@ use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => redirect()->route('dashboard'));
+
 require __DIR__.'/auth.php';
 
 Route::middleware('auth')->group(function () {
@@ -17,24 +18,36 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::controller(DepartmentController::class)->prefix('departments')->group(function () {
-        Route::get('/', 'index')->name('department');
-        Route::post('/', 'store')->name('department.store');
-        Route::put('/{department}', 'update')->name('department.update');
-        Route::delete('/{department}', 'delete')->name('department.delete');
+        Route::group(['middleware' => ['permission:view departments']], function () {
+            Route::get('/', 'index')->name('department');
+
+            Route::post('/', 'store')->name('department.store')->middleware('permission:create departments');
+            Route::put('/{department}', 'update')->name('department.update')->middleware('permission:edit departments');
+            Route::delete('/{department}', 'delete')->name('department.delete')->middleware('permission:delete departments');
+        });
     });
 
     Route::controller(RoleController::class)->prefix('roles')->group(function () {
-        Route::get('/', 'index')->name('role');
-        Route::get('/show/{role}', 'show')->name('role.show');
-        Route::get('/create', 'create')->name('role.create');
-        Route::post('/', 'store')->name('role.store');
-        Route::get('/edit/{role}', 'edit')->name('role.edit');
-        Route::put('/{role}', 'update')->name('role.update');
-        Route::delete('/{role}', 'delete')->name('role.delete');
+        Route::group(['middleware' => ['permission:view roles']], function () {
+            Route::get('/', 'index')->name('role');
+            Route::get('/show/{role}', 'show')->name('role.show');
+            
+            Route::group(['middleware' => ['permission:create roles']], function () {
+                Route::get('/create', 'create')->name('role.create');
+                Route::post('/', 'store')->name('role.store');
+            });
+
+            Route::group(['middleware' => ['permission:edit roles']], function () {
+                Route::get('/edit/{role}', 'edit')->name('role.edit');
+                Route::put('/{role}', 'update')->name('role.update');
+            });
+
+            Route::delete('/{role}', 'delete')->name('role.delete')->middleware('permission:delete roles');
+        });
     });
 
     Route::controller(LogController::class)->prefix('logs')->group(function () {
-        Route::get('/activity-logs', 'index')->name('activity-logs');
+        Route::get('/activity-logs', 'index')->name('activity-logs')->middleware('permission:view activity logs');
     });
 });
 

@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class PermissionSeeder extends Seeder
 {
@@ -18,19 +17,20 @@ class PermissionSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::create(['name' => 'view users']);
-        Permission::create(['name' => 'create users']);
-        Permission::create(['name' => 'edit users']);
-        Permission::create(['name' => 'delete users']);
+        // Roles
+        Permission::create(['name' => 'view roles']);
+        Permission::create(['name' => 'create roles']);
+        Permission::create(['name' => 'edit roles']);
+        Permission::create(['name' => 'delete roles']);
 
-        // create roles and assign created permissions
+        // Departments
+        Permission::create(['name' => 'view departments']);
+        Permission::create(['name' => 'create departments']);
+        Permission::create(['name' => 'edit departments']);
+        Permission::create(['name' => 'delete departments']);
 
-        // this can be done as separate statements
-        Role::create(['name' => 'administrator']);
-
-        // or may be done by chaining
-        Role::create(['name' => 'manager'])
-            ->givePermissionTo(['view users', 'create users', 'edit users', 'delete users']);
+        // Activity Log
+        Permission::create(['name' => 'view activity logs']);
     }
 }
  

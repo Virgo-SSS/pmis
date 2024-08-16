@@ -3,29 +3,61 @@
 namespace Tests;
 
 use App\Models\User;
+use Database\Seeders\PermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 abstract class TestCase extends BaseTestCase
 {
     use RefreshDatabase;
 
-    protected function setUp(): void
+    /**
+     * Login User
+     * 
+     * @param string $role
+     * @param array{string} | string | null $permission
+     * @return User
+     */
+    public function loginUser(string $role, array | string | null $permission = null): User
     {
-        // first include all the normal setUp operations
-        parent::setUp();
+        $user = $this->createUser($role, $permission);
 
-        // now de-register all the roles and permissions by clearing the permission cache
-        $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        $this->actingAs($user);
+
+        return $user;
     }
 
     /**
-     * Create User
-     * 
+     * Create a user with a role and permission
+     *
+     * @param string $role
+     * @param array{string} | string | null $permission
      * @return User
      */
-    public function createUser(): User
+    public function createUser(string $role, array | string | null $permission = null): User
     {
-        return User::factory()->create();
+        $role = Role::create(['name' => $role]);
+
+        if($permission) {
+            if(is_array($permission)) {
+                foreach($permission as $p) {
+                    $permission = Permission::create(['name' => $p]);
+                    $role->givePermissionTo($permission->name);
+                }
+            }
+
+            if(is_string($permission)) {
+                $permission = Permission::create(['name' => $permission]);
+                $role->givePermissionTo($permission->name);
+            }
+        }
+
+        $user = User::factory()->create();
+
+        $user->assignRole($role->name);
+
+        return $user;
     }
 }

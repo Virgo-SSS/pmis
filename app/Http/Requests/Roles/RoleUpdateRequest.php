@@ -4,6 +4,7 @@ namespace App\Http\Requests\Roles;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Validator;
 
 class RoleUpdateRequest extends FormRequest
 {
@@ -27,5 +28,29 @@ class RoleUpdateRequest extends FormRequest
             'permissions' => ['required', 'array'],
             'permissions.*' => ['exists:permissions,id'],
         ];
+    }
+
+    /**
+     * Get the "after" validation callables for the request.
+     */
+    public function after(): array
+    {
+        return [
+            function (Validator $validator) {
+                if ($this->isAdministratorRole()) {
+                    $validator->errors()->add('name', 'Administrator role cannot be edited.');
+                }
+            }
+        ];
+    }
+
+    /**
+     * Determine if user tried to update administrator role.
+     * 
+     * @return bool
+     */
+    private function isAdministratorRole(): bool
+    {
+        return $this->role->name === 'Administrator';
     }
 }

@@ -15,7 +15,7 @@ class DepartmentTest extends TestCase
      */
     public function test_user_can_view_the_department_page(): void
     {
-        $this->actingAs($this->createUser());
+        $this->loginUser('HR', ['view departments']);
 
         $response = $this->get(route('department'));
 
@@ -25,17 +25,29 @@ class DepartmentTest extends TestCase
     }
 
     /**
-     * Test user can't create a department if not authenticated.
+     * Test user can't view the department page if not authenticated.
      * 
      * @return void
      */
-    public function test_user_cant_create_a_department_if_not_authenticated(): void
+    public function test_user_cant_view_the_department_page_if_not_authenticated(): void
     {
-        $response = $this->post(route('department.store'), [
-            'name' => 'IT Department',
-        ]);
+        $response = $this->get(route('department'));
 
         $response->assertRedirect(route('login'));
+    }
+
+    /**
+     * Test user can't view the department page without permission.
+     * 
+     * @return void
+     */
+    public function test_user_cant_view_the_department_page_without_permission(): void
+    {
+        $this->loginUser('HR');
+
+        $response = $this->get(route('department'));
+
+        $response->assertForbidden();
     }
 
     /**
@@ -45,9 +57,8 @@ class DepartmentTest extends TestCase
      */
     public function test_user_can_create_a_department(): void
     {
-        $user = $this->createUser();
-        $this->actingAs($user);
-
+        $user = $this->loginUser('HR', ['view departments', 'create departments']);
+        
         $response = $this->post(route('department.store'), [
             'name' => 'IT Department',
         ]);
@@ -76,13 +87,47 @@ class DepartmentTest extends TestCase
      */
     public function test_department_name_is_required_to_create_a_department(): void
     {
-        $this->actingAs($this->createUser());
+        $this->loginUser('HR', ['view departments', 'create departments']);
 
         $response = $this->post(route('department.store'), [
             'name' => '',
         ]);
 
         $response->assertSessionHasErrors('name');
+    }
+
+    /**
+     * Test department name is unique to create a department.
+     * 
+     * @return void
+     */
+    public function test_department_name_is_unique_to_create_a_department(): void
+    {
+        $this->loginUser('HR', ['view departments', 'create departments']);
+
+        $department = Department::factory()->create();
+
+        $response = $this->post(route('department.store'), [
+            'name' => $department->name,
+        ]);
+
+        $response->assertSessionHasErrors('name');
+    }
+
+    /**
+     * Test user can't create a department if not authorized.
+     * 
+     * @return void
+     */
+    public function test_user_cant_create_a_department_if_not_authorized(): void
+    {
+        $this->loginUser('HR', ['view departments']);
+
+        $response = $this->post(route('department.store'), [
+            'name' => 'IT Department',
+        ]);
+
+        $response->assertForbidden();
     }
 
     /**
@@ -108,7 +153,8 @@ class DepartmentTest extends TestCase
      */
     public function test_user_can_update_a_department(): void
     {
-        $user = $this->createUser();
+        $user = $this->loginUser('HR', ['view departments', 'edit departments']);
+
         $this->actingAs($user);
 
         $department = Department::factory()->create();
@@ -141,7 +187,7 @@ class DepartmentTest extends TestCase
      */
     public function test_department_name_is_required_to_update_a_department(): void
     {
-        $this->actingAs($this->createUser());
+        $this->loginUser('HR', ['view departments', 'edit departments']);
 
         $department = Department::factory()->create();
 
@@ -159,7 +205,7 @@ class DepartmentTest extends TestCase
      */
     public function test_department_name_is_unique_to_update_a_department(): void
     {
-        $this->actingAs($this->createUser());
+        $this->loginUser('HR', ['view departments', 'edit departments']);
 
         $department = Department::factory()->create();
         $department2 = Department::factory()->create();
@@ -169,6 +215,24 @@ class DepartmentTest extends TestCase
         ]);
 
         $response->assertSessionHasErrors('name');
+    }
+
+    /**
+     * Test user can't update a department if not authorized.
+     * 
+     * @return void
+     */
+    public function test_user_cant_update_a_department_if_not_authorized(): void
+    {
+        $this->loginUser('HR', ['view departments']);
+
+        $department = Department::factory()->create();
+
+        $response = $this->put(route('department.update', $department), [
+            'name' => 'IT Department',
+        ]);
+
+        $response->assertForbidden();
     }
 
     /**
@@ -192,8 +256,7 @@ class DepartmentTest extends TestCase
      */
     public function test_user_can_delete_a_department(): void
     {
-        $user = $this->createUser();
-        $this->actingAs($user);
+        $user = $this->loginUser('HR', ['view departments', 'delete departments']);
 
         $department = Department::factory()->create();
 
@@ -214,5 +277,21 @@ class DepartmentTest extends TestCase
             'causer_type' => User::class,
             'causer_id' => $user->id,
         ]);
+    }
+
+    /**
+     * Test User can't delete a department if not authorized.
+     * 
+     * @return void
+     */
+    public function test_user_cant_delete_a_department_if_not_authorized(): void
+    {
+        $this->loginUser('HR', ['view departments']);
+
+        $department = Department::factory()->create();
+
+        $response = $this->delete(route('department.delete', $department));
+
+        $response->assertForbidden();
     }
 }

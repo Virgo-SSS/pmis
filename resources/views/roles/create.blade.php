@@ -11,14 +11,13 @@
     <form action="{{ route('role.store') }}" method="POST">
         @csrf
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Role</h5>
                         <div class="row">
                             <div class="col-12">
-                                <label for="role-name" class="form-label">Role Name</label>
-                                <input type="text" name="name" value="{{ old('name') }}" class="form-control" id="role-name">
+                                <input type="text" name="name" value="{{ old('name') }}" class="form-control" id="role-name" placeholder="Role Name e.g. Admin">
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -29,7 +28,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-9">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Permissions</h5>

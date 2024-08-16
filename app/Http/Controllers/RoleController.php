@@ -17,7 +17,10 @@ class RoleController extends Controller
 {
     public function index(): View
     {
-        $roles = Role::query()->with('permissions')->get();
+        $roles = Role::query()
+        ->with('permissions')
+        ->where('name', '!=', 'Administrator')
+        ->get();
         
         return view('roles.index', compact('roles'));
     }
@@ -64,6 +67,10 @@ class RoleController extends Controller
 
     public function delete(Role $role, DeleteRoleAction $action): RedirectResponse
     {
+        if ($role->name === 'Administrator') {
+            return redirect()->route('role')->with('error-swal', 'Administrator role cannot be deleted.');
+        }
+        
         $action->run($role);
         
         return redirect()->route('role')->with('success-swal', 'Role deleted successfully.');
