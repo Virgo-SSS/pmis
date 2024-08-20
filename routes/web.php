@@ -4,6 +4,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => redirect()->route('dashboard'));
@@ -31,7 +32,7 @@ Route::middleware('auth')->group(function () {
         Route::group(['middleware' => ['permission:view roles']], function () {
             Route::get('/', 'index')->name('role');
             Route::get('/show/{role}', 'show')->name('role.show');
-            
+
             Route::group(['middleware' => ['permission:create roles']], function () {
                 Route::get('/create', 'create')->name('role.create');
                 Route::post('/', 'store')->name('role.store');
@@ -43,6 +44,25 @@ Route::middleware('auth')->group(function () {
             });
 
             Route::delete('/{role}', 'delete')->name('role.delete')->middleware('permission:delete roles');
+        });
+    });
+
+    Route::controller(UserController::class)->prefix('users')->group(function () {
+        Route::group(['middleware' => ['permission:view users']], function () {
+            Route::get('/', 'index')->name('user');
+            Route::get('/show/{user}', 'show')->name('user.show');
+
+            Route::group(['middleware' => ['permission:create users']], function () {
+                Route::get('/create', 'create')->name('user.create');
+                Route::post('/', 'store')->name('user.store');
+            });
+
+            Route::group(['middleware' => ['permission:edit users']], function () {
+                Route::get('/edit/{user}', 'edit')->name('user.edit');
+                Route::put('/{user}', 'update')->name('user.update');
+            });
+
+            Route::delete('/{user}', 'delete')->name('user.delete')->middleware('permission:delete users');
         });
     });
 

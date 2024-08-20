@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\DataTransferObjects;
 
@@ -8,11 +8,12 @@ class CreateRoleData
         public readonly string $name,
         public readonly array $permissions
     ) {}
-    
+
     /**
      * Create a new instance from an array.
-     * 
+     *
      * @param array{name: string, permissions: array} $data
+     * @return self
      */
     public static function fromArray(array $data): self
     {

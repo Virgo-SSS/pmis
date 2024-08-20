@@ -31,6 +31,12 @@ class PermissionSeeder extends Seeder
 
         // Activity Log
         Permission::create(['name' => 'view activity logs']);
+        
+        // Users
+        Permission::create(['name' => 'view users']);
+        Permission::create(['name' => 'create users']);
+        Permission::create(['name' => 'edit users']);
+        Permission::create(['name' => 'delete users']);
     }
 }
  
