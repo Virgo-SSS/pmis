@@ -34,6 +34,15 @@
             </li>
         @endcan
 
+        @can('view banks')
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('bank') ? '' : 'collapsed' }}"
+                    href="{{ route('bank') }}">
+                    <i class="bi bi-building"></i>
+                    <span>Bank</span>
+                </a>
+            </li>
+        @endcan
 
         @can('view departments')
             <li class="nav-item">

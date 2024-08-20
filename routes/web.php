@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\ProfileController;
@@ -68,6 +69,16 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(LogController::class)->prefix('logs')->group(function () {
         Route::get('/activity-logs', 'index')->name('activity-logs')->middleware('permission:view activity logs');
+    });
+
+    Route::controller(BankController::class)->prefix('banks')->group(function () {
+        Route::group(['middleware' => ['permission:view banks']], function () {
+            Route::get('/', 'index')->name('bank');
+
+            Route::post('/', 'store')->name('bank.store')->middleware('permission:create banks');
+            Route::put('/{bank}', 'update')->name('bank.update')->middleware('permission:edit banks');
+            Route::delete('/{bank}', 'delete')->name('bank.delete')->middleware('permission:delete banks');
+        });
     });
 });
 

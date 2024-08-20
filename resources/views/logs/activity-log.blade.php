@@ -26,7 +26,7 @@
                                 @foreach ($logs as $log)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $log->causer->name }}</td>
+                                        <td>{{ $log->causer->name ?? 'System' }}</td>
                                         <td>
                                             {{ $log->event }}
                                         </td>
