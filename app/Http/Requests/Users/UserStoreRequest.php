@@ -23,17 +23,28 @@ class UserStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
+            // Personal Details
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
+
+            // Profile
             'department_id' => 'required|integer|exists:departments,id',
-            'roles' => 'required|array',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'phone' => 'nullable|string|max:255',
             'emergency_contact' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
-            'joined_at' => 'nullable|date:Y-m-d',
+            'joined_at' => 'required|date:Y-m-d',
+            'gender' => 'nullable|string|max:255',
+
+            // Bank
+            'bank_id' => 'nullable|integer|exists:banks,id',
+            'account_number' => 'nullable|string|max:255',
+            'account_name' => 'nullable|string|max:255',
+
+            // Roles
+            'roles' => 'required|array',
         ];
     }
 }

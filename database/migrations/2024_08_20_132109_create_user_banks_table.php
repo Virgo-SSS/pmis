@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('user_banks', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('bank_id')->nullable();
+            $table->string('account_number');
+            $table->string('account_name');
             $table->timestamps();
+
+            $table->foreign('bank_id')->references('id')->on('banks')->nullOnDelete();
         });
     }
 

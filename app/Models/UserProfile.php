@@ -17,13 +17,14 @@ class UserProfile extends Model
         'department_id',
         'profile_picture',
         'phone',
+        'gender',
         'emergency_contact',
         'address',
         'joined_at',
     ];
 
     protected $casts = [
-        'joined_at' => 'date',
+        'joined_at' => 'date:Y-m-d',
     ];
 
     public function user(): BelongsTo

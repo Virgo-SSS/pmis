@@ -8,6 +8,7 @@ use App\Actions\Users\UpdateUserAction;
 use App\DataTransferObjects\CreateUserData;
 use App\Http\Requests\Users\UserStoreRequest;
 use App\Http\Requests\Users\UserUpdateRequest;
+use App\Models\Bank;
 use App\Models\Department;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -32,8 +33,9 @@ class UserController extends Controller
     {
         $departments = Department::query()->get();
         $roles = Role::query()->get();
+        $banks = Bank::query()->get();
 
-        return view('users.create', compact('departments', 'roles'));
+        return view('users.create', compact('departments', 'roles', 'banks'));
     }
 
     public function store(UserStoreRequest $request, CreateUserAction $action): RedirectResponse
@@ -49,8 +51,9 @@ class UserController extends Controller
     {
         $departments = Department::query()->get();
         $roles = Role::query()->get();
+        $banks = Bank::query()->get();
 
-        return view('users.edit', compact('user', 'departments', 'roles'));
+        return view('users.edit', compact('user', 'departments', 'roles', 'banks'));
     }
 
     public function update(UserUpdateRequest $request, User $user, UpdateUserAction $action): RedirectResponse

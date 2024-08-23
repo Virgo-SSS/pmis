@@ -15,8 +15,7 @@ class User extends Authenticatable
 {
     use HasRoles,
         HasFactory,
-        Notifiable,
-        LogsActivity;
+        Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -54,47 +53,22 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the options for the department activity log.
-     *
-     * @return LogOptions
-     */
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logOnly([
-                'name',
-                'email',
-                'username',
-                'profile.department_id',
-                'profile.profile_picture',
-                'profile.phone',
-                'profile.emergency_contact',
-                'profile.address',
-                'profile.joined_at',
-                'roles',
-            ])
-            ->setDescriptionForEvent(function (string $eventName) {
-                switch ($eventName) {
-                    case 'created':
-                        return 'Create new user with name ' . $this->name;
-                        break;
-                    case 'updated':
-                        return 'Update user with name ' . $this->name;
-                        break;
-                    case 'deleted':
-                        return 'Delete user with name ' . $this->name;
-                        break;
-                }
-            });
-    }
-
-    /**
      * user profile relationship
      *
      * @return HasOne
      */
     public function profile(): HasOne
     {
-        return $this->hasOne(UserProfile::class);
+        return $this->hasOne(UserProfile::class, 'user_id', 'id');
+    }
+
+    /**
+     * user bank relationship
+     *
+     * @return HasOne
+     */
+    public function bank(): HasOne
+    {
+        return $this->hasOne(UserBank::class, 'user_id', 'id');
     }
 }

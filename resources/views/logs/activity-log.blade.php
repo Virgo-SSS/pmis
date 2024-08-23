@@ -61,6 +61,11 @@
                                                                 </thead>
                                                                 <tbody>
                                                                     @foreach ($old as $key => $value)
+                                                                        @php
+                                                                            if (is_array($value)) {
+                                                                                $value = implode(', ', $value);
+                                                                            }
+                                                                        @endphp
                                                                         <tr>
                                                                             <td>{{ $key }}</td>
                                                                             <td>{{ $value }}</td>
@@ -80,6 +85,11 @@
                                                                 </thead>
                                                                 <tbody>
                                                                     @foreach ($new as $key => $value)
+                                                                        @php
+                                                                            if (is_array($value)) {
+                                                                                $value = implode(', ', $value);
+                                                                            }
+                                                                        @endphp
                                                                         <tr>
                                                                             <td>{{ $key }}</td>
                                                                             <td>{{ $value }}</td>

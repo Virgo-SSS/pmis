@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('user_profile', function (Blueprint $table) {
-            //
+        Schema::table('user_profiles', function (Blueprint $table) {
+            $table->enum('gender', ['F', 'M'])->nullable()->after('phone');
         });
     }
 
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('user_profile', function (Blueprint $table) {
+        Schema::table('user_profiles', function (Blueprint $table) {
             //
         });
     }
