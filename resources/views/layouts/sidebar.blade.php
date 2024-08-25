@@ -81,5 +81,15 @@
                 </ul>
             </li>
         @endcanany
+
+        @can('view attendances')
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('attendance') ? '' : 'collapsed' }}"
+                    href="{{ route('attendance') }}">
+                    <i class="bi bi-building"></i>
+                    <span>Attendance</span>
+                </a>
+            </li>
+        @endcan
     </ul>
 </aside>

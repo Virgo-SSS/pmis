@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LogController;
@@ -78,6 +79,24 @@ Route::middleware('auth')->group(function () {
             Route::post('/', 'store')->name('bank.store')->middleware('permission:create banks');
             Route::put('/{bank}', 'update')->name('bank.update')->middleware('permission:edit banks');
             Route::delete('/{bank}', 'delete')->name('bank.delete')->middleware('permission:delete banks');
+        });
+    });
+
+    Route::controller(AttendanceController::class)->prefix('attendances')->group(function () {
+        Route::group(['middleware' => ['permission:view attendances']], function () {
+            Route::get('/', 'index')->name('attendance');
+
+            Route::group(['middleware' => ['permission:create attendances']], function () {
+                Route::get('/create', 'create')->name('attendance.create');
+                Route::post('/', 'store')->name('attendance.store');
+            });
+
+            Route::group(['middleware' => ['permission:edit attendances']], function () {
+                Route::get('/edit/{attendance}', 'edit')->name('attendance.edit');
+                Route::put('/{attendance}', 'update')->name('attendance.update');
+            });
+
+            Route::delete('/{attendance}', 'delete')->name('attendance.delete')->middleware('permission:delete attendances');
         });
     });
 });

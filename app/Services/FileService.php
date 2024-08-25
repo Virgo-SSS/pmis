@@ -20,6 +20,7 @@ class FileService
      */
     public function storeFile(File|UploadedFile|FileTesting $file, string $path, bool $isOriginalName = false, bool $isPublic = false): string
     {
+        // TODO: make a test for this method
         $original_name = $file->getClientOriginalName();
         $extension = $file->getClientOriginalExtension();
 

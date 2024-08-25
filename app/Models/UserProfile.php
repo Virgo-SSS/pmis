@@ -23,9 +23,17 @@ class UserProfile extends Model
         'joined_at',
     ];
 
-    protected $casts = [
-        'joined_at' => 'date:Y-m-d',
-    ];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'joined_at' => 'date:Y-m-d',
+        ];
+    }
 
     public function user(): BelongsTo
     {
