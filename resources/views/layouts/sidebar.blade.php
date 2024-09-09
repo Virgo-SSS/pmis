@@ -91,5 +91,37 @@
                 </a>
             </li>
         @endcan
+
+        @canany(['view leaves', 'create leaves', 'review leaves'])
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#leave-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-layout-text-window-reverse"></i><span>Leaves</span><i
+                        class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="leave-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    @can('review leaves')
+                        <li>
+                            <a href="{{ route('leave.review') }}" class="nav-link">
+                                <i class="bi bi-circle"></i><span>Review Leave</span>
+                            </a>
+                        </li>
+                    @endcan
+                    @can('view leaves')
+                        <li>
+                            <a href="{{ route('leave') }}" class="nav-link">
+                                <i class="bi bi-circle"></i><span>Leave</span>
+                            </a>
+                        </li>
+                    @endcan
+                    @can('create leaves')
+                        <li>
+                            <a href="{{ route('leave.create') }}" class="nav-link">
+                                <i class="bi bi-circle"></i><span>Create Leave</span>
+                            </a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
     </ul>
 </aside>

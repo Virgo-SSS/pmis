@@ -45,9 +45,16 @@ class PermissionSeeder extends Seeder
 //        Permission::create(['name' => 'delete banks']);
 
         // Attendance
-        Permission::create(['name' => 'view attendances']);
-        Permission::create(['name' => 'create attendances']);
-        Permission::create(['name' => 'edit attendances']);
-        Permission::create(['name' => 'delete attendances']);
+//        Permission::create(['name' => 'view attendances']);
+//        Permission::create(['name' => 'create attendances']);
+//        Permission::create(['name' => 'edit attendances']);
+//        Permission::create(['name' => 'delete attendances']);
+
+        // Leave
+        Permission::create(['name' => 'view leaves']);
+        Permission::create(['name' => 'create leaves']);
+        Permission::create(['name' => 'edit leaves']);
+        Permission::create(['name' => 'delete leaves']);
+        Permission::create(['name' => 'review leaves']);
     }
 }

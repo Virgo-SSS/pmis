@@ -1,13 +1,11 @@
 <?php
 
-namespace Tests\Unit;
+namespace Service;
 
-use App\DataTransferObjects\CreateAttendanceData;
-use App\Enums\AttendanceStatus;
 use App\Services\AttendanceService;
 use PHPUnit\Framework\TestCase;
 
-    class AttendanceServiceTest extends TestCase
+class AttendanceServiceTest extends TestCase
 {
     /**
      * Test function normalizeOvertimeToSeconds returns the correct value

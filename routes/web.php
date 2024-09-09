@@ -3,6 +3,7 @@
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
@@ -97,6 +98,30 @@ Route::middleware('auth')->group(function () {
             });
 
             Route::delete('/{attendance}', 'delete')->name('attendance.delete')->middleware('permission:delete attendances');
+        });
+    });
+
+    Route::controller(LeaveController::class)->prefix('leaves')->group(function () {
+        Route::group(['middleware' => ['permission:view leaves']], function () {
+            Route::get('/', 'index')->name('leave');
+        });
+
+        Route::group(['middleware' => ['permission:create leaves']], function () {
+            Route::get('/create', 'create')->name('leave.create');
+            Route::post('/', 'store')->name('leave.store');
+        });
+
+        Route::group(['middleware' => ['permission:edit leaves']], function () {
+            Route::get('/edit/{leave}', 'edit')->name('leave.edit');
+            Route::put('/{leave}', 'update')->name('leave.update');
+        });
+
+        Route::delete('/{leave}', 'delete')->name('leave.delete')->middleware('permission:delete leaves');
+
+        Route::group(['middleware' => ['permission:review leaves']], function () {
+            Route::get('/review', 'review')->name('leave.review');
+            Route::patch('/{leave}/approve', 'approve')->name('leave.approve');
+            Route::patch('/{leave}/reject', 'reject')->name('leave.reject');
         });
     });
 });
